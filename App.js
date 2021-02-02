@@ -1,21 +1,43 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { createAppContainer, createSwitchNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+import * as firebase from 'firebase';
+import { firebaseConfig } from './config/firebase';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+import AuthNavigator from './src/screens/AuthNavigator';
+import PeopleScreen from './src/screens/PeopleScreen';
+import MedListScreen from './src/screens/MedListScreen';
+import CreatePersonScreen from './src/screens/CreatePersonScreen';
+import EditPersonScreen from './src/screens/EditPersonScreen';
+import AddMedicationScreen from './src/screens/AddMedicationScreen';
+import MedDetailScreen from './src/screens/MedDetailScreen';
+
+// import LoginScreen from './src/screens/LoginScreen';
+
+firebase.initializeApp(firebaseConfig);
+
+const navigator = createSwitchNavigator({
+  Auth: AuthNavigator,
+  App: createStackNavigator({
+    People: PeopleScreen,
+    MedList: MedListScreen,
+    CreatePerson: CreatePersonScreen,
+    EditPerson: EditPersonScreen,
+    AddMedication: AddMedicationScreen,
+    MedDetail: MedDetailScreen,
+  })
+}, {
+  initialRouteName: 'Auth',
+  defaultNavigationOptions: {
+    title: 'MedBase'
+  }
 });
+
+const App = createAppContainer(navigator);
+
+export default() => {
+  return <App />
+};
